@@ -15,7 +15,17 @@
 
 @if (risk(); as r) {
   <section class="cards">
-    <div class="card"><span>Niveau de risque</span><strong>{{ r.risk_level }}</strong></div>
+    <div class="card">
+      <span>Niveau de risque</span>
+      <strong
+        class="badge"
+        [class.low]="r.risk_level === 'low'"
+        [class.medium]="r.risk_level === 'medium'"
+        [class.high]="r.risk_level === 'high'"
+      >
+        {{ r.risk_level === 'high' ? 'Élevé' : r.risk_level === 'medium' ? 'Moyen' : 'Faible' }}
+      </strong>
+    </div>
     <div class="card"><span>Score</span><strong>{{ r.risk_score }}</strong></div>
     <div class="card"><span>ACWR</span><strong>{{ r.features.acwr }}</strong></div>
     <div class="card"><span>Charge 7 jours</span><strong>{{ r.features.acute_load }}</strong></div>
