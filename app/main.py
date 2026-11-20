@@ -155,3 +155,66 @@ def get_risk(
         "risk_level": level,
         "features": features,
     }
+
+
+
+@app.get("/athletes")
+def list_athletes(db: Session = Depends(get_db)):
+    athletes = db.query(models.Athlete).all()
+    return [{"id": a.id, "name": a.user.name, "sport": a.sport} for a in athletes]
+
+
+@app.get("/athletes/{athlete_id}/load-history")
+def load_history(
+    athlete_id: int,
+    days: int = 28,
+    on: datetime.date | None = None,
+    db: Session = Depends(get_db),
+):
+    if not db.get(models.Athlete, athlete_id):
+        raise HTTPException(status_code=404, detail="Athlète introuvable")
+
+    end = on or datetime.date.today()
+    start = end - datetime.timedelta(days=days - 1)
+    sessions = (
+        db.query(models.TrainingSession)
+        .filter(
+            models.TrainingSession.athlete_id == athlete_id,
+            models.TrainingSession.date >= start,
+            models.TrainingSession.date <= end,
+        )
+        .all()
+    )
+
+    totals = {}
+    for s in sessions:
+        totals[s.date] = totals.get(s.date, 0) + s.load
+
+    result = []
+    for i in range(days):
+        day = start + datetime.timedelta(days=i)
+        result.append({"date": day, "load": totals.get(day, 0)})
+    return result
+
+
+@app.get("/athletes/{athlete_id}/risk-history")
+def risk_history(athlete_id: int, db: Session = Depends(get_db)):
+    if not db.get(models.Athlete, athlete_id):
+        raise HTTPException(status_code=404, detail="Athlète introuvable")
+
+    rows = (
+        db.query(models.RiskPrediction)
+        .filter(models.RiskPrediction.athlete_id == athlete_id)
+        .order_by(models.RiskPrediction.prediction_date, models.RiskPrediction.id)
+        .all()
+    )
+
+    # On garde la dernière prédiction de chaque jour
+    latest = {}
+    for r in rows:
+        latest[r.prediction_date] = r
+
+    return [
+        {"date": d, "risk_score": r.risk_score, "risk_level": r.risk_level}
+        for d, r in latest.items()
+    ]

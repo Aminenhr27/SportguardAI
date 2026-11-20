@@ -1,0 +1,29 @@
+<h2>Dashboard</h2>
+
+<label>
+  Athlète
+  <select [ngModel]="athleteId" (ngModelChange)="onSelect($event)">
+    @for (a of athletes(); track a.id) {
+      <option [ngValue]="a.id">{{ a.name }} ({{ a.sport }})</option>
+    }
+  </select>
+</label>
+
+@if (error()) {
+  <p>{{ error() }}</p>
+}
+
+@if (risk(); as r) {
+  <section class="cards">
+    <div class="card"><span>Niveau de risque</span><strong>{{ r.risk_level }}</strong></div>
+    <div class="card"><span>Score</span><strong>{{ r.risk_score }}</strong></div>
+    <div class="card"><span>ACWR</span><strong>{{ r.features.acwr }}</strong></div>
+    <div class="card"><span>Charge 7 jours</span><strong>{{ r.features.acute_load }}</strong></div>
+  </section>
+}
+
+<h3>Charge d'entraînement (28 derniers jours)</h3>
+<div class="chart"><canvas #loadCanvas></canvas></div>
+
+<h3>Historique du score de risque</h3>
+<div class="chart"><canvas #riskCanvas></canvas></div>
