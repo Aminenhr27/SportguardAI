@@ -143,5 +143,5 @@ Place-toi de profil, jambe entière visible. Le modèle MediaPipe se télécharg
 
 ## Auteur
 
-**Bahria Med Amine** · Projet SportGuard AI
+**Bahria Mohamed Amine** · Projet SportGuard AI
 LINKEDIN : https://www.linkedin.com/in/mohamed-amine-bahria-86ab25247/
