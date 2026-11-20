@@ -1,0 +1,24 @@
+<h2>Risque de blessure</h2>
+
+<label>
+  ID de l'athlète
+  <input type="number" min="1" [(ngModel)]="athleteId" />
+</label>
+<button (click)="load()">Calculer le risque</button>
+
+@if (error()) {
+  <p>{{ error() }}</p>
+}
+
+@if (result(); as r) {
+  <h3>Niveau : {{ r.risk_level }}</h3>
+  <p>Score : {{ r.risk_score }}</p>
+  <ul>
+    <li>ACWR : {{ r.features.acwr }}</li>
+    <li>Charge 7 jours : {{ r.features.acute_load }}</li>
+    <li>Charge chronique : {{ r.features.chronic_load }}</li>
+    <li>Sommeil moyen : {{ r.features.sleep_avg }}</li>
+    <li>Fatigue moyenne : {{ r.features.fatigue_avg }}</li>
+    <li>Stress moyen : {{ r.features.stress_avg }}</li>
+  </ul>
+}

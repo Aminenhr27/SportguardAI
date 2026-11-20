@@ -2,12 +2,20 @@ import bcrypt
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 import datetime
+from fastapi.middleware.cors import CORSMiddleware
 
 from app import models, schemas
 from app.database import SessionLocal
 from app.services import risk_service, ml_service
 
 app = FastAPI(title="SportGuard AI")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_db():

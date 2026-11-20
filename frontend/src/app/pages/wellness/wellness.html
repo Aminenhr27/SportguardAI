@@ -1,0 +1,36 @@
+<h2>Bien-être du jour</h2>
+
+<form (ngSubmit)="save()">
+  <label>
+    ID de l'athlète
+    <input type="number" name="athleteId" min="1" [(ngModel)]="athleteId" />
+  </label>
+  <label>
+    Date
+    <input type="date" name="date" [(ngModel)]="date" />
+  </label>
+  <label>
+    Heures de sommeil
+    <input type="number" name="sleepHours" min="0" max="24" step="0.5" [(ngModel)]="sleepHours" />
+  </label>
+  <label>
+    Fatigue : {{ fatigue }} / 10
+    <input type="range" name="fatigue" min="1" max="10" [(ngModel)]="fatigue" />
+  </label>
+  <label>
+    Stress : {{ stress }} / 10
+    <input type="range" name="stress" min="1" max="10" [(ngModel)]="stress" />
+  </label>
+  <label>
+    Courbatures : {{ soreness }} / 10
+    <input type="range" name="soreness" min="1" max="10" [(ngModel)]="soreness" />
+  </label>
+  <button type="submit">Enregistrer le bien-être</button>
+</form>
+
+@if (message()) {
+  <p>{{ message() }}</p>
+}
+@if (error()) {
+  <p>{{ error() }}</p>
+}
