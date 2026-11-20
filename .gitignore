@@ -5,3 +5,4 @@ __pycache__/
 .vscode/
 ml/synthetic_data.csv
 ml/model.pkl
+vision/*.task

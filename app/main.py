@@ -218,3 +218,42 @@ def risk_history(athlete_id: int, db: Session = Depends(get_db)):
         {"date": d, "risk_score": r.risk_score, "risk_level": r.risk_level}
         for d, r in latest.items()
     ]
+
+
+
+@app.post("/movements")
+def create_movement(data: schemas.MovementCreate, db: Session = Depends(get_db)):
+    if not db.get(models.Athlete, data.athlete_id):
+        raise HTTPException(status_code=404, detail="Athlète introuvable")
+    if data.session_id is not None and not db.get(models.TrainingSession, data.session_id):
+        raise HTTPException(status_code=404, detail="Séance introuvable")
+
+    movement = models.MovementAnalysis(**data.model_dump())
+    db.add(movement)
+    db.commit()
+    db.refresh(movement)
+    return {"id": movement.id, "created_at": movement.created_at}
+
+
+@app.get("/athletes/{athlete_id}/movements")
+def list_movements(athlete_id: int, db: Session = Depends(get_db)):
+    if not db.get(models.Athlete, athlete_id):
+        raise HTTPException(status_code=404, detail="Athlète introuvable")
+
+    rows = (
+        db.query(models.MovementAnalysis)
+        .filter(models.MovementAnalysis.athlete_id == athlete_id)
+        .order_by(models.MovementAnalysis.created_at.desc())
+        .all()
+    )
+    return [
+        {
+            "id": m.id,
+            "created_at": m.created_at,
+            "exercise": m.exercise,
+            "reps": m.reps,
+            "avg_min_angle": m.avg_min_angle,
+            "posture_score": m.posture_score,
+        }
+        for m in rows
+    ]

@@ -30,3 +30,13 @@ class WellnessCreate(BaseModel):
     fatigue: int = Field(ge=1, le=10)
     stress: int = Field(ge=1, le=10)
     muscle_soreness: int = Field(ge=1, le=10)
+
+    
+
+class MovementCreate(BaseModel):
+    athlete_id: int
+    session_id: int | None = None
+    exercise: str
+    reps: int = Field(ge=0)
+    avg_min_angle: float | None = None
+    posture_score: float = Field(ge=0, le=100)

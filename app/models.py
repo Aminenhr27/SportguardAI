@@ -123,3 +123,22 @@ class RiskPrediction(Base):
     model_version = Column(String(30))
 
     athlete = relationship("Athlete", back_populates="predictions")
+
+    
+
+class MovementAnalysis(Base):
+    __tablename__ = "movement_analyses"
+    __table_args__ = (
+        CheckConstraint("posture_score BETWEEN 0 AND 100", name="ck_movement_score"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    athlete_id = Column(Integer, ForeignKey("athletes.id", ondelete="CASCADE"), nullable=False, index=True)
+    session_id = Column(Integer, ForeignKey("training_sessions.id", ondelete="SET NULL"), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    exercise = Column(String(30), nullable=False)  # squat, pompes...
+    reps = Column(Integer, nullable=False)
+    avg_min_angle = Column(Float)  # angle moyen du genou au point bas
+    posture_score = Column(Float, nullable=False)  # 0 à 100
+
+    athlete = relationship("Athlete")

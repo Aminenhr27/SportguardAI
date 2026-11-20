@@ -1,0 +1,38 @@
+<h2>Mouvements (analyse caméra)</h2>
+
+<label>
+  ID de l'athlète
+  <input type="number" min="1" [(ngModel)]="athleteId" />
+</label>
+<button (click)="load()">Afficher</button>
+
+@if (error()) {
+  <p>{{ error() }}</p>
+}
+
+@if (items().length > 0) {
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Exercice</th>
+        <th>Répétitions</th>
+        <th>Angle moyen (point bas)</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (m of items(); track m.id) {
+        <tr>
+          <td>{{ m.created_at.slice(0, 16).replace('T', ' ') }}</td>
+          <td>{{ m.exercise }}</td>
+          <td>{{ m.reps }}</td>
+          <td>{{ m.avg_min_angle }}°</td>
+          <td>{{ m.posture_score }} / 100</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+} @else {
+  <p>Aucune analyse pour le moment. Lance vision/squat_tracker.py.</p>
+}

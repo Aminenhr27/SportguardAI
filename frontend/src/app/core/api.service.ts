@@ -82,6 +82,10 @@ export class ApiService {
     return this.http.get<RiskPoint[]>(`${this.baseUrl}/athletes/${athleteId}/risk-history`);
   }
 
+  getMovements(athleteId: number): Observable<MovementItem[]> {
+    return this.http.get<MovementItem[]>(`${this.baseUrl}/athletes/${athleteId}/movements`);
+  }
+
   createSession(data: SessionPayload): Observable<{ id: number; load: number }> {
     return this.http.post<{ id: number; load: number }>(`${this.baseUrl}/sessions`, data);
   }
@@ -89,4 +93,13 @@ export class ApiService {
   createWellness(data: WellnessPayload): Observable<{ id: number; date: string }> {
     return this.http.post<{ id: number; date: string }>(`${this.baseUrl}/wellness`, data);
   }
+}
+
+export interface MovementItem {
+  id: number;
+  created_at: string;
+  exercise: string;
+  reps: number;
+  avg_min_angle: number | null;
+  posture_score: number;
 }
